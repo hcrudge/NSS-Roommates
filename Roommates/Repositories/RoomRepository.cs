@@ -145,6 +145,54 @@ namespace Roommates.Repositories
             // when this method is finished we can look in the database and see the new room.
         }
 
+        /// <summary>
+        ///  Updates the room
+        /// </summary>
+        public void Update(Room room)
+        {
+            using (SqlConnection connection = Connection)
+            {
+                connection.Open();
+                using (SqlCommand command = connection.CreateCommand())
+                {
+                    command.CommandText = @"UPDATE Room
+                                    SET Name = @name,
+                                        MaxOccupancy = @maxOccupancy
+                                    WHERE Id = @id";
+                    command.Parameters.AddWithValue("@name", room.Name);
+                    command.Parameters.AddWithValue("@maxOccupancy", room.MaxOccupancy);
+                    command.Parameters.AddWithValue("@id", room.Id);
+
+                    command.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        ///  Delete the room with the given id
+        /// </summary>
+        public void Delete(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    // What do you think this code will do if there is a roommate in the room we're deleting???
+                    cmd.CommandText = "DELETE FROM Room WHERE Id = @id";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
+
+
+
+
+
+
+
 
     }
 }
